@@ -1,3 +1,4 @@
+import 'package:color_scale/color_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:yahoo_finance_data_reader/yahoo_finance_data_reader.dart';
 
@@ -42,15 +43,42 @@ class MyApp extends StatelessWidget {
                               DateTime date =
                                   DateTime.fromMillisecondsSinceEpoch(
                                       historicalData[index]['date'] * 1000);
+                              double variation = 0;
+                              if (index != 0) {
+                                double yesterdayValue =
+                                    historicalData[index - 1]['adjclose'];
+                                double todayValue =
+                                    historicalData[index]['adjclose'];
 
-                              return Column(
-                                children: [
-                                  Text(date.toString()),
-                                  Container(
-                                      margin: const EdgeInsets.all(10),
-                                      child: Text(
-                                          historicalData[index].toString())),
-                                ],
+                                variation =
+                                    (todayValue / yesterdayValue - 1) * 100;
+                              }
+
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: ColorScaleWidget(
+                                    value: variation,
+                                    minValue: -2,
+                                    minColor: Colors.red,
+                                    maxValue: 2,
+                                    maxColor: Colors.green,
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Column(
+                                        children: [
+                                          Text(date.toString()),
+                                          Text(variation.toStringAsFixed(2)),
+                                          Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: Text(historicalData[index]
+                                                  .toString())),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               );
                             });
                       } else if (snapshot.hasError) {
