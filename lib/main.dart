@@ -46,9 +46,11 @@ class MyApp extends StatelessWidget {
                               double variation = 0;
                               if (index != 0) {
                                 double yesterdayValue =
-                                    historicalData[index - 1]['adjclose'];
-                                double todayValue =
-                                    historicalData[index]['adjclose'];
+                                    historicalData[index - 1]['adjclose']
+                                        .toDouble();
+                                double todayValue = historicalData[index]
+                                        ['adjclose']
+                                    .toDouble();
 
                                 variation =
                                     (todayValue / yesterdayValue - 1) * 100;
